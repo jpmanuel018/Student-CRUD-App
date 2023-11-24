@@ -71,6 +71,12 @@ class AddStudentScreen extends HookWidget {
       body: BlocProvider(
         create: (context) => sl<StudentBloc>(),
         child: BlocListener<StudentBloc, StudentState> (
+          listenWhen: (_, state) => state.maybeWhen(
+            loading: () => true,
+            addSuccess: () => true,
+            error: (_) => true,
+            orElse: () => false,
+          ),
           listener: (_, state) {
             state.whenOrNull(
               loading: () {
