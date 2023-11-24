@@ -39,11 +39,14 @@ class StudentListScreen extends StatelessWidget {
           ),
         ),
         body: BlocBuilder<StudentBloc, StudentState> (
+          buildWhen: (_, state) => state.maybeWhen(
+            loading: () => true,
+            success: (_) => true,
+            error: (_) => true,
+            orElse: () => false,
+          ),
           builder: (_, state) {
-            return state.when(
-                initial: () {
-                  return const Placeholder();
-                },
+            return state.maybeWhen(
                 loading: () {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -70,16 +73,13 @@ class StudentListScreen extends StatelessWidget {
                       }
                   );
                 },
-                addSuccess: () {
-                  return const Placeholder();
-                },
-                updateSuccess: () {
-                  return const Placeholder();
-                },
                 error: (error) {
                   return Center(
                     child: Text("${error.message}"),
                   );
+                },
+                orElse: () {
+                  return const SizedBox.shrink();
                 }
             );
           },
